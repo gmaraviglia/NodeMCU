@@ -89,6 +89,8 @@ void WifiConnect_Task ()
     client.stop();
     Firebase.setInt(DataToCloud[0].Variable_Name, DataToCloud[0].Value);
     Firebase.setInt(DataToCloud[1].Variable_Name, DataToCloud[1].Value);
+    Firebase.setInt("prova", 22);
+    
   }
 }
 
