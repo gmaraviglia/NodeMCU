@@ -3,8 +3,8 @@
 
 #define LIST_SIZE 5
 
-#define FIREBASE_HOST "https://esp8266-42777.firebaseio.com/"
-#define FIREBASE_AUTH "token_or_secret"
+#define FIREBASE_HOST "esp8266-42777.firebaseio.com"
+#define FIREBASE_AUTH "BRe4H2fvmZqckengb5q0loH8u15fLczUXypc6Rf1"
  
 const char* ssid     = "LACASA";
 const char* password = "peppemara";
@@ -13,6 +13,8 @@ char server[]  = "www.ic2pro.com";
 int port       = 80;
 String devId   = "6a16c5d7-7b96-4f51-b675-16786c15b9e1";              
 String auth    = "cGVwcGVtYXJhODNAaG90bWFpbC5jb206c29za29kYXBwYTYy";  
+
+int heartbeat = 0;
 
 WiFiClient client; 
 
@@ -62,11 +64,11 @@ void WifiConnect_SendToCloud(String variable_name, int value, int pos)
 }
 
 void WifiConnect_Task ()
-{
+{  
   int connection = 0;
   // Use WiFiClient class to create TCP connections
   const int httpPort = 80;
-  //Serial.println(range);
+  //Serial.println(range);  
   connection = client.connect(server, httpPort);
   //Serial.println(connection);
   if (!connection) {
@@ -86,31 +88,12 @@ void WifiConnect_Task ()
     client.println("Authorization: Basic " + auth);
     client.println("Connection: close");
     client.println();
-    client.stop();
-    Firebase.setInt(DataToCloud[0].Variable_Name, DataToCloud[0].Value);
-    Firebase.setInt(DataToCloud[1].Variable_Name, DataToCloud[1].Value);
-    Firebase.setInt("prova", 22);
-    
+    client.stop();    
   }
-}
+  Firebase.setInt(DataToCloud[0].Variable_Name, DataToCloud[0].Value);
+  Firebase.setInt(DataToCloud[1].Variable_Name, DataToCloud[1].Value);
+  Firebase.setInt("Heartbeat", heartbeat);
+  heartbeat++;
+  }
 
-//void WifiConnect_Task (String variable, int value)
-//{
-//  int connection = 0;
-//  // Use WiFiClient class to create TCP connections
-//  const int httpPort = 80;
-//  //Serial.println(range);
-//  connection = client.connect(server, httpPort);
-//  //Serial.println(connection);
-//  if (!connection) {
-//    Serial.println("connection failed");
-//  }
-//  else
-//  {  // connect to server
-//    client.println("GET http://" + String(server) + ":" + String(port) + "/Wire/connector/set?id=" + devId + "&variable=" + value+ " HTTP/1.1");   // submit HTTP request
-//    client.println("Authorization: Basic " + auth);
-//    client.println("Connection: close");
-//    client.println();
-//    client.stop();
-//  }
-//}
+
